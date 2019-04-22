@@ -1,0 +1,17 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+CWD	test_example_topojson.py	/^CWD = os.path.dirname(os.path.realpath(__file__))$/;"	v
+TemplateTopo	test_example_topojson.py	/^class TemplateTopo(Topo):$/;"	c
+args	test_example_topojson.py	/^    args = ["-s"] + sys.argv[1:]$/;"	v
+bgp_convergence	test_example_topojson.py	/^bgp_convergence = False$/;"	v
+build	test_example_topojson.py	/^    def build(self, *_args, **_opts):$/;"	m	class:TemplateTopo
+input_dict	test_example_topojson.py	/^input_dict = {}$/;"	v
+jsonFile	test_example_topojson.py	/^jsonFile = "test_example_topojson.json"$/;"	v
+setup_module	test_example_topojson.py	/^def setup_module(mod):$/;"	f
+teardown_module	test_example_topojson.py	/^def teardown_module(mod):$/;"	f
+test_bgp_convergence	test_example_topojson.py	/^def test_bgp_convergence():$/;"	f
+topo	test_example_topojson.py	/^        topo = json.load(topoJson)$/;"	v

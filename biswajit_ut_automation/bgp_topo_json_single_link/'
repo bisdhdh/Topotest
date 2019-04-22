@@ -1,0 +1,211 @@
+#!/usr/bin/env python
+
+#
+# Copyright (c) 2019 by VMware, Inc. ("VMware")
+# Used Copyright (c) 2018 by Network Device Education Foundation, Inc. ("NetDEF")
+# in this file.
+#
+# Permission to use, copy, modify, and/or distribute this software
+# for any purpose with or without fee is hereby granted, provided
+# that the above copyright notice and this permission notice appear
+# in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND VMWARE DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL VMWARE BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY
+# DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+# WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS
+# ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE
+# OF THIS SOFTWARE.
+#
+
+"""
+<example>.py: Test <example tests>.
+"""
+
+import os
+import sys
+import json
+import time
+import inspect
+import pytest
+
+# Save the Current Working Directory to find configuration files.
+CWD = os.path.dirname(os.path.realpath(__file__))
+sys.path.append(os.path.join(CWD, '../../'))
+
+# pylint: disable=C0413
+# Import topogen and topotest helpers
+from lib import topotest
+from lib.topogen import Topogen, TopoRouter, get_topogen
+from lib.topolog import logger
+
+# Required to instantiate the topology builder class.
+from mininet.topo import Topo
+
+# Import topoJson from lib, to create topology and initial configuration
+from lib.topojson import *
+
+# Reading the data from JSON File for topology and configuration creation
+jsonFile = "test_example_topojson.json"
+try:
+    with open(jsonFile, 'r') as topoJson:
+        topo = json.load(topoJson)
+except IOError:
+    logger.info("Could not read file:", jsonFile)
+
+# Global variables
+bgp_convergence = False
+input_dict = {}
+
+class GenerateTopo(Topo):
+    """
+    Test topology builder
+   
+    * `Topo`: Topology object
+    """
+
+    def build(self, *_args, **_opts):
+        "Build function"
+        tgen = get_topogen(self)
+
+        # This function only purpose is to create topology
+        # as defined in input json file.
+        #
+        # Example
+        #
+        # Creating 2 routers having single links in between,
+        # which is used to establised BGP neighborship
+
+        # Building topology from json file
+        build_topo_from_json(tgen, topo)
+
+def setup_module(mod):
+   '''
+   Sets up the pytest environment
+
+   * `mod`: module name
+   '''
+
+   testsuite_run_time = time.asctime(time.localtime(time.time()))
+   logger.info("Testsuite start time: {}".format(testsuite_run_time))
+   logger.info("="*40)
+
+   logger.info("Running setup_module to create topology")
+
+   # This function initiates the topology build with Topogen...
+   tgen = Topogen(GenerateTopo, mod.__name__)
+   # ... and here it calls Mininet initialization functions.
+
+   # Starting topology
+   tgen.start_topology()
+
+   # Starting deamons and routers
+   start_deamons_and_routers(tgen, CWD)
+
+   # Creating configuration from JSON
+   build_config_from_json(tgen, topo, CWD)
+
+   # Checking BGP convergence
+   global bgp_convergence
+
+   # Dont run this test if we have any failure.
+   if tgen.routers_have_failure():
+       pytest.skip(tgen.errors)
+
+   # Api call verify whether BGP is converged
+   bgp_convergence = verify_bgp_convergence('ipv4', tgen, topo)
+   if bgp_convergence != True: assert False, ("setup_module :Failed \n Error:"
+                                               " {}".format(bgp_convergence))
+
+   logger.info("Running setup_module() done")
+
+
+def teardown_module(mod):
+   '''
+   Teardown the pytest environment
+
+   * `mod`: module name
+   '''
+
+   logger.info("Running teardown_module to delete topology")
+
+   tgen = get_topogen()
+
+   # This function tears down the whole topology.
+   tgen.stop_topology()
+
+   # Removing tmp dirs and files
+   remove_temp_files(tgen, CWD)
+
+   logger.info("Testsuite end time: {}".\
+               format(time.asctime(time.localtime(time.time()))))
+
+
+def test_bgp_graceful_restart():
+    logger.info(" Test BGP GR [Helper Mode]R1-----R2[Restart Mode] ")
+
+
+    tgen = get_topogen()
+    global bgp_convergence
+    tc_name = "test_bgp_graceful_restart"
+    
+    if bgp_convergence != True:
+        pytest.skip('skipped because of BGP Convergence failure')
+   
+
+    # GR test case starts from here.
+    input_dict = {
+   	"r1": {
+       	  "bgp": {
+            "bgp_neighbors": {
+               "r2": {
+                       "graceful-restart": "graceful-restart-helper"
+                }
+       	     }
+           }
+         },
+        "r2": {
+          "bgp": {
+            "bgp_neighbors": {
+               "r1": {
+                       "graceful-restart": "graceful-restart"
+                }
+             }
+           }
+         }
+    }
+    result = configure_graceful_restart('ipv4', input_dict, tgen, CWD, topo)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    clear_bgp_and_verify('ipv4', tgen, "r1", topo)
+    clear_bgp_and_verify('ipv4', tgen, "r2", topo)
+
+
+
+    result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut = "r1")
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    result = verify_r_bit('ipv4', input_dict, tgen, topo, dut="r1")
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    # redistribute static routes from r1 --> r2 
+    
+    next_hop = "192.168.0.2" 
+    result = verify_bgp_rib('ipv4', 'r1', tgen, input_dict, next_hop, protocol = None):
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    clear_bgp_and_verify('ipv4', tgen, "r2", topo)
+
+#verify_bgp_rib(ADDR_TYPE, dut, tgen, input_dict, next_hop = None, protocol = None):
+    tgen.mininet_cli()
+ 
+
+if __name__ == '__main__':
+    args = ["-s"] + sys.argv[1:]
+    sys.exit(pytest.main(args))

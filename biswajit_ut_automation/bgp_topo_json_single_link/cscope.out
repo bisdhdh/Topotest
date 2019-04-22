@@ -1,0 +1,1559 @@
+cscope 15 $HOME/frr-topo/tests/topotests/example-topojson-test/test_topo_json_single_link               0000007088
+	@__init__.py
+
+	@test_example_topojson.py
+
+1 #!/
+u¤
+/
+bš
+/
+’v
+ 
+pythÚ
+
+
+3 #
+#Cİyrighˆ(
+c
+è2019 
+by
+ 
+VMw¬e
+, 
+Inc
+. ("VMware")
+
+5 #U£d 
+Cİyright
+ (
+c
+è2018 
+by
+ 
+N‘wÜk
+ 
+Deviû
+ 
+EduÿtiÚ
+ 
+Found©iÚ
+, 
+Inc
+. ("NetDEF")
+
+6 #š 
+this
+ 
+fe
+.
+
+7 #
+#P”missiÚ 
+to
+ 
+u£
+, 
+cİy
+, 
+modify
+, 
+ªd
+/
+Ü
+ 
+di¡ribu‹
+ 
+this
+ 
+soáw¬e
+
+
+9 #fÜ 
+ªy
+ 
+pu½o£
+ 
+w™h
+ 
+Ü
+ 
+w™hout
+ 
+ãe
+ 
+is
+ 
+h”eby
+ 
+g¿Áed
+, 
+´ovided
+
+
+10 #th© 
+the
+ 
+above
+ 
+cİyright
+ 
+nÙiû
+ 
+ªd
+ 
+this
+ 
+³rmissiÚ
+‚Ùiû 
+­³¬
+
+
+11 #š 
+®l
+ 
+cİ›s
+.
+
+12 #
+#THE 
+SOFTWARE
+ 
+IS
+ 
+PROVIDED
+ "AS IS" 
+AND
+ 
+VMWARE
+ 
+DISCLAIMS
+ 
+ALL
+ 
+WARRANTIES
+
+
+14 #WITH 
+REGARD
+ 
+TO
+ 
+THIS
+ 
+SOFTWARE
+ 
+INCLUDING
+ 
+ALL
+ 
+IMPLIED
+ 
+WARRANTIES
+ 
+OF
+
+
+15 #MERCHANTABILITY 
+AND
+ 
+FITNESS
+. 
+IN
+ 
+NO
+ 
+EVENT
+ 
+SHALL
+ 
+VMWARE
+ 
+BE
+ 
+LIABLE
+ 
+FOR
+
+
+16 #ANY 
+SPECIAL
+, 
+DIRECT
+, 
+INDIRECT
+, 
+OR
+ 
+CONSEQUENTIAL
+ 
+DAMAGES
+ OR 
+ANY
+
+
+17 #DAMAGES 
+WHATSOEVER
+ 
+RESULTING
+ 
+FROM
+ 
+LOSS
+ 
+OF
+ 
+USE
+, 
+DATA
+ 
+OR
+ 
+PROFITS
+,
+
+18 #WHETHER 
+IN
+ 
+AN
+ 
+ACTION
+ 
+OF
+ 
+CONTRACT
+, 
+NEGLIGENCE
+ 
+OR
+ 
+OTHER
+ 
+TORTIOUS
+
+
+19 #ACTION, 
+ARISING
+ 
+OUT
+ 
+OF
+ 
+OR
+ 
+IN
+ 
+CONNECTION
+ 
+WITH
+ 
+THE
+ 
+USE
+ OR 
+PERFORMANCE
+
+
+20 #OF 
+THIS
+ 
+SOFTWARE
+.
+
+24 <
+	gexam¶e
+>.
+	gpy
+: 
+Te¡
+ <
+exam¶e
+ 
+‹¡s
+>.
+
+27 
+impÜt
+ 
+os
+
+
+28 
+impÜt
+ 
+sys
+
+
+29 
+impÜt
+ 
+jsÚ
+
+
+30 
+impÜt
+ 
+š¥eù
+
+
+31 
+impÜt
+ 
+py‹¡
+
+
+33 #Sav
+the
+ 
+Cu¼’t
+ 
+WÜkšg
+ 
+DœeùÜy
+ 
+to
+ 
+fšd
+ 
+cÚfigu¿tiÚ
+ 
+fes
+.
+
+34 
+CWD
+ = 
+os
+.
+·th
+.
+dœÇme
+(os.·th.
+	$»®·th
+(
+__fe__
+))
+
+35 
+sys
+.
+·th
+.
+	`­³nd
+(
+os
+.·th.
+	`još
+(
+CWD
+, '../../'))
+
+37 #pylšt: 
+di§bË
+=
+C0413
+
+
+38 #ImpÜˆ
+tİog’
+ 
+ªd
+ 
+tİÙe¡
+ 
+h–³rs
+
+
+39 
+äom
+ 
+lib
+ 
+impÜt
+ 
+tİÙe¡
+
+
+40 
+äom
+ 
+lib
+.
+tİog’
+ 
+impÜt
+ 
+Tİog’
+, 
+TİoRou‹r
+, 
+g‘_tİog’
+
+
+41 
+äom
+ 
+lib
+.
+tİŞog
+ 
+impÜt
+ 
+logg”
+
+
+43 #Requœed 
+to
+ 
+š¡ªtŸ‹
+ 
+the
+ 
+tİŞogy
+ 
+bud”
+ 
+şass
+.
+
+44 
+äom
+ 
+mšš‘
+.
+tİo
+ 
+impÜt
+ 
+Tİo
+
+
+46 #ImpÜˆ
+tİoJsÚ
+ 
+äom
+ 
+lib
+, 
+to
+ 
+ü—‹
+ 
+tİŞogy
+ 
+ªd
+ 
+š™Ÿl
+ 
+cÚfigu¿tiÚ
+
+
+47 
+äom
+ 
+lib
+.
+tİojsÚ
+ 
+impÜt
+ *
+
+49 #R—dšg 
+the
+ 
+d©a
+ 
+äom
+ 
+JSON
+ 
+Fe
+ 
+tİŞogy
+ 
+ªd
+ 
+cÚfigu¿tiÚ
+ 
+ü—tiÚ
+
+
+50 
+jsÚFe
+ = "test_example_topojson.json"
+
+51 
+Œy
+:
+
+52 
+w™h
+ 
+	`İ’
+(
+jsÚFe
+, 'r'è
+as
+ 
+tİoJsÚ
+:
+
+53 
+tİo
+ = 
+jsÚ
+.
+	$lßd
+(
+tİoJsÚ
+)
+
+54 
+exû±
+ 
+IOE¼Ü
+:
+
+55 
+logg”
+.
+	`šfo
+("Could‚Ù„—d fe:", 
+jsÚFe
+)
+
+57 #Glob® 
+v¬ŸbËs
+
+
+58 
+bgp_cÚv”g’û
+ = 
+F®£
+
+
+59 
+šput_diù
+ = {
+	}
+}
+
+61 
+şass
+ 
+	$Tem¶©eTİo
+(
+Tİo
+):
+
+63 
+Te¡
+ 
+tİŞogy
+ 
+bud”
+
+
+65 * `
+Tİo
+`: 
+TİŞogy
+ 
+objeù
+
+
+68 
+def
+ 
+	$bud
+(
+£lf
+, *
+_¬gs
+, **
+_İts
+):
+
+70 
+tg’
+ = 
+	$g‘_tİog’
+(
+£lf
+)
+
+72 #Thi 
+funùiÚ
+ 
+Úly
+ 
+pu½o£
+ 
+is
+ 
+to
+ 
+ü—‹
+ 
+tİŞogy
+
+
+73 #a 
+defšed
+ 
+š
+ 
+šput
+ 
+jsÚ
+ 
+fe
+.
+
+76 #
+#C»©šg 2 
+rou‹rs
+ 
+havšg
+ 
+sšgË
+ 
+lšks
+ 
+š
+ 
+b‘w“n
+,
+
+78 #which 
+is
+ 
+u£d
+ 
+to
+ 
+e¡abli£d
+ 
+BGP
+ 
+ÃighbÜsh
+
+
+80 #Budšg 
+tİŞogy
+ 
+äom
+ 
+jsÚ
+ 
+fe
+
+
+81 
+	$bud_tİo_äom_jsÚ
+(
+tg’
+, 
+tİo
+)
+
+83 
+def
+ 
+	$£tup_moduË
+(
+mod
+):
+
+85 
+S‘s
+ 
+up
+ 
+the
+ 
+py‹¡
+ 
+’vœÚm’t
+
+
+87 * `
+mod
+`: 
+moduË
+ 
+Çme
+
+
+90 
+‹¡su™e_run_time
+ = 
+time
+.
+	`asùime
+Ñime.
+	`loÿÉime
+Ñime.
+	$time
+()))
+
+91 
+logg”
+.
+	`šfo
+("Te¡su™¡¬ˆtime: {}".
+	$fÜm©
+(
+‹¡su™e_run_time
+))
+
+92 
+logg”
+.
+	`šfo
+("="*40)
+
+94 
+logg”
+.
+	`šfo
+("Running setup_moduleo createopology")
+
+96 #Thi 
+funùiÚ
+ 
+š™Ÿ‹s
+ 
+the
+ 
+tİŞogy
+ 
+bud
+ 
+w™h
+ 
+Tİog’
+...
+
+97 
+tg’
+ = 
+	$Tİog’
+(
+Tem¶©eTİo
+, 
+mod
+.
+__Çme__
+)
+
+98 #... 
+ªd
+ 
+h”e
+ 
+™
+ 
+ÿÎs
+ 
+Mšš‘
+ 
+š™Ÿliz©iÚ
+ 
+funùiÚs
+.
+
+100 #S¹šg 
+tİŞogy
+
+
+101 
+tg’
+.
+	$¡¬t_tİŞogy
+()
+
+103 #Uncomm’ˆ
+fŞlowšg
+ 
+lše
+ 
+to
+ 
+’abË
+ 
+debug
+ 
+logs
+ 
+ªd
+ 
+comm’t
+ - 
+tg’
+.
+	`¡¬t_tİŞogy
+()
+
+104 #tg’.
+	`¡¬t_tİŞogy
+(
+log_Ëv–
+='debug')
+
+106 
+rou‹r_li¡
+ = 
+tg’
+.
+	$rou‹rs
+()
+
+107 
+ºame
+, 
+rou‹r
+ 
+š
+ 
+rou‹r_li¡
+.
+	$™”™ems
+():
+
+108 
+Œy
+:
+
+109 
+os
+.
+	$chdœ
+(
+CWD
+)
+
+110 #D–‘šg 
+rou‹r
+ 
+Çmed
+ 
+dœs
+ 
+exi¡s
+
+
+111 
+os
+.
+·th
+.
+	`exi¡s
+('{}'.
+	$fÜm©
+(
+ºame
+)):
+
+112 
+os
+.
+	`sy¡em
+("rm -rà{}".
+	$fÜm©
+(
+ºame
+))
+
+114 #C»©šg 
+rou”
+ 
+Çmed
+ 
+dœ
+ 
+ªd
+ 
+emÙy
+ 
+zeb¿
+.
+cÚf
+ 
+bgpd
+.cÚà
+fes
+ 
+šside
+ 
+the
+ 
+cu¼’t
+ 
+dœeùÜy
+
+
+115 
+os
+.
+	`mkdœ
+('{}'.
+	$fÜm©
+(
+ºame
+))
+
+116 
+os
+.
+	`chdœ
+("{}/{}".
+	$fÜm©
+(
+CWD
+, 
+ºame
+))
+
+117 
+os
+.
+	`sy¡em
+('touch zebra.conf bgpd.conf')
+
+118 
+exû±
+ 
+IOE¼Ü
+ 
+	$as
+ (
+”ºo
+, 
+¡»¼Ü
+):
+
+119 
+logg”
+.
+	`”rÜ
+("I/Oƒ¼Ü({0}): {1}".
+	$fÜm©
+(
+”ºo
+, 
+¡»¼Ü
+))
+
+121 #Lßdšg 
+em±y
+ 
+zeb¿
+.
+cÚf
+ 
+fe
+ 
+to
+ 
+rou‹r
+,Ø
+¡¬t
+ 
+the
+ zeb¿ 
+d—mÚ
+
+
+122 
+rou‹r
+.
+	`lßd_cÚfig
+(
+
+123 
+TİoRou‹r
+.
+RD_ZEBRA
+,
+
+124 
+os
+.
+·th
+.
+	`još
+(
+CWD
+, '{}/zeb¿.cÚf'.
+	$fÜm©
+(
+ºame
+))
+
+126 #Lßdšg 
+em±y
+ 
+bgpd
+.
+cÚf
+ 
+fe
+ 
+to
+ 
+rou‹r
+,Ø
+¡¬t
+ 
+the
+ 
+bgp
+ 
+d—mÚ
+
+
+127 
+rou‹r
+.
+	`lßd_cÚfig
+(
+
+128 
+TİoRou‹r
+.
+RD_BGP
+,
+
+129 
+os
+.
+·th
+.
+	`još
+(
+CWD
+, '{}/bgpd.cÚf'.
+	$fÜm©
+(
+ºame
+))
+
+132 #Aá” 
+lßdšg
+ 
+the
+ 
+cÚfigu¿tiÚs
+, 
+this
+ 
+funùiÚ
+ 
+¡¬ts
+ 
+cÚfigu»d
+ 
+d«mÚs
+.
+
+133 
+logg”
+.
+	`šfo
+("Starting‡ll„outers onceopology is created")
+
+134 
+tg’
+.
+	$¡¬t_rou‹r
+()
+
+136 #Thi 
+funùiÚ
+ 
+Úly
+ 
+pu½o£
+ 
+is
+ 
+to
+ 
+ü—‹
+ 
+cÚfigu¿tiÚ
+
+
+137 #a 
+defšed
+ 
+š
+ 
+šput
+ 
+jsÚ
+ 
+fe
+.
+
+140 #
+#C»©šg 
+cÚfigu¿tiÚ
+ 
+defšed
+ 
+š
+ 
+šput
+ 
+JSON
+
+
+142 #fe, 
+exam¶e
+, 
+BGP
+ 
+cÚfig
+, 
+š‹rçû
+ cÚfig, 
+rou‹s
+
+
+143 #cÚfig, 
+´efix
+ 
+li¡
+ 
+cÚfig
+
+
+145 #C»©šg 
+cÚfigu¿tiÚ
+ 
+äom
+ 
+JSON
+
+
+146 
+	$bud_cÚfig_äom_jsÚ
+(
+tg’
+, 
+tİo
+, 
+CWD
+)
+
+148 
+logg”
+.
+	`šfo
+("Running setup_module() done")
+
+150 
+def
+ 
+	$‹¬down_moduË
+(
+mod
+):
+
+152 
+T—rdown
+ 
+the
+ 
+py‹¡
+ 
+’vœÚm’t
+
+
+154 * `
+mod
+`: 
+moduË
+ 
+Çme
+
+
+157 
+logg”
+.
+	`šfo
+("Runningeardown_moduleo deleteopology")
+
+159 
+tg’
+ = 
+	$g‘_tİog’
+()
+
+161 #Thi 
+funùiÚ
+ 
+‹¬s
+ 
+down
+ 
+the
+ 
+whŞe
+ 
+tİŞogy
+.
+
+162 
+tg’
+.
+	$¡İ_tİŞogy
+()
+
+164 #Removšg 
+tmp
+ 
+dœs
+ 
+ªd
+ 
+fes
+
+
+165 
+rou‹r_li¡
+ = 
+tg’
+.
+	$rou‹rs
+()
+
+166 
+ºame
+, 
+rou‹r
+ 
+š
+ 
+rou‹r_li¡
+.
+	$™”™ems
+():
+
+167 
+Œy
+:
+
+168 
+os
+.
+	$chdœ
+(
+CWD
+)
+
+169 
+os
+.
+	`sy¡em
+("rm -rà{}".
+	$fÜm©
+(
+ºame
+))
+
+170 
+exû±
+ 
+IOE¼Ü
+ 
+	$as
+ (
+”ºo
+, 
+¡»¼Ü
+):
+
+171 
+logg”
+.
+	`”rÜ
+("I/Oƒ¼Ü({0}): {1}".
+	$fÜm©
+(
+”ºo
+, 
+¡»¼Ü
+))
+
+173 
+def
+ 
+	$‹¡_bgp_cÚv”g’û
+():
+
+176 
+tg’
+ = 
+	$g‘_tİog’
+()
+
+177 
+glob®
+ 
+bgp_cÚv”g’û
+
+
+180 
+tg’
+.
+	$rou‹rs_have_çu»
+():
+
+181 
+py‹¡
+.
+	$sk
+(
+tg’
+.
+”rÜs
+)
+
+183 
+tg’
+.
+	$mšš‘_şi
+()
+
+184 #Ap˜
+ÿÎ
+ 
+v”ify
+ 
+wh‘h”
+ 
+BGP
+ 
+is
+ 
+cÚv”ged
+
+
+185 
+bgp_cÚv”g’û
+ = 
+	`v”ify_bgp_cÚv”g’û
+('v4', 
+tg’
+, 
+tİo
+)
+
+186 
+bgp_cÚv”g’û
+ !ğ
+True
+: 
+as£¹
+ 
+F®£
+, "‹¡_bgp_cÚv”g’û faed.. \ÀE¼Ü: {}".
+	$fÜm©
+(
+bgp_cÚv”g’û
+)
+
+188 
+logg”
+.
+	`šfo
+("BGP is converged successfully \n")
+
+190 #Uncomm’ˆ
+Ãxt
+ 
+lše
+ 
+debuggšg
+
+
+191 #tg’.
+	`mšš‘_şi
+()
+
+194 
+def
+ 
+	$‹¡_¡©ic_rou‹s
+():
+
+197 
+tg’
+ = 
+	$g‘_tİog’
+()
+
+198 
+glob®
+ 
+bgp_cÚv”g’û
+
+
+200 
+bgp_cÚv”g’û
+ !ğ
+True
+:
+
+201 
+py‹¡
+.
+	`sk
+('skipped because of BGP Convergence failure')
+
+203 #Te¡ 
+Çme
+
+
+204 
+tc_Çme
+ = 
+š¥eù
+.
+	`¡ack
+()[0][3]
+
+205 
+logg”
+.
+	`šfo
+("Te¡ÿ£ s¹ed: {} \n".
+	$fÜm©
+(
+tc_Çme
+))
+
+207 #Stiø
+rou‹s
+ 
+¬e
+ 
+ü—‹d
+ 
+as
+ 
+·¹
+ 
+of
+ 
+š™Ÿl
+ 
+cÚfigu¿tiÚ
+, 
+v”ifyšg
+ 
+RIB
+
+
+208 
+dut
+ = 'r2'
+
+209 
+Ãxt_hİ
+ = '10.0.0.1'
+
+210 
+šput_diù
+ = 
+tİo
+["routers"]
+
+211 
+»suÉ
+ = 
+	`v”ify_rib
+('v4', 
+dut
+, 
+tg’
+, 
+šput_diù
+, 
+Ãxt_hİ
+ =‚ext_hop)
+
+212 
+»suÉ
+ !ğ
+True
+ : 
+as£¹
+ 
+F®£
+, "Te¡ÿ£ " + 
+tc_Çme
+ + " :Faed \ÀE¼Ü: {}".
+	$fÜm©
+(
+»suÉ
+)
+
+214 
+logg”
+.
+	`šfo
+("Te¡ÿ£ " + 
+tc_Çme
+ + " :Passed \n")
+
+216 #Uncomm’ˆ
+Ãxt
+ 
+lše
+ 
+debuggšg
+
+
+217 
+tg’
+.
+	`mšš‘_şi
+()
+
+220 
+__Çme__
+ == '__main__':
+
+221 
+¬gs
+ = ["-s"] + 
+sys
+.
+¬gv
+[1:]
+
+222 
+sys
+.
+	`ex™
+(
+py‹¡
+.
+	`maš
+(
+¬gs
+))
+
+	@
+1
+.
+1
+/usr/include
+2
+37
+__init__.py
+test_example_topojson.py

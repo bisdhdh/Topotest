@@ -1728,3 +1728,72 @@ def verify_route_maps(ADDR_TYPE, input_dict, tgen):
 
     logger.info("Exiting lib API: verify_route_maps()")
     return True
+
+
+def stop_router(tgen, CWD, router):
+    """
+    Router's current config would be saved to /etc/frr/ for each deamon
+    and router and its deamons would be stopped.
+ 
+    * `tgen`  : topogen object
+    * `CWD` : Caller's current working directory
+    * `router`: Device under test
+    """
+ 
+    logger.info("Entering lib API: stop_router()")
+
+    router_list = tgen.routers()
+ 
+    # Saving router config to /etc/frr, which will be loaded to router
+    # when it starts
+    router_list[router].vtysh_cmd("write memory")
+ 
+    # Stop router
+    router_list[router].stop()
+
+    logger.info("Exiting lib API: stop_router()")
+
+def send_SigTerm(tgen, CWD, router):
+    """
+    Router's current config would be saved to /etc/frr/ for each deamon
+    and router and its deamons would be stopped forcefully
+ 
+    * `tgen`  : topogen object
+    * `CWD` : Caller's current working directory
+    * `router`: Device under test
+    """
+ 
+    logger.info("Entering lib API: send_SigTerm()")
+
+    router_list = tgen.routers()
+ 
+    # Saving router config to /etc/frr, which will be loaded to router
+    # when it starts
+    router_list[router].vtysh_cmd("write memory")
+ 
+    # Stop router
+    router_list[router].sendSigTerm()
+
+    logger.info("Exiting lib API: send_SigTerm()")
+
+ 
+def start_router(tgen, CWD, router):
+    """
+    Router will started and config would be loaded from /etc/frr/ for each
+    deamon
+ 
+    * `tgen`  : topogen object
+    * `CWD` : Caller's current working directory
+    * `router`: Device under test
+    """
+ 
+    logger.info("Entering lib API: start_router()")
+
+    router_list = tgen.routers()
+ 
+    # Router and its deamons would be started and config would be loaded to 
+    # for each deamon from /etc/frr
+    router_list[router].start()
+
+    sleep (5)
+    logger.info("Entering lib API: start_router()")

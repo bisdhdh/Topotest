@@ -678,6 +678,14 @@ class TopoRouter(TopoGear):
         self.logger.debug('stopping')
         return self.tgen.net[self.name].stopRouter(wait, assertOnError)
 
+    def sendSigTerm(self, wait=True, assertOnError=True):
+        """
+        sendSigTerm router:
+        * Kill daemons forcefully by sigterm
+        """
+        self.logger.debug('stopping by sigterm')
+        return self.tgen.net[self.name].sendSigTermToRouter(wait, assertOnError)
+
     def vtysh_cmd(self, command, isjson=False, daemon=None):
         """
         Runs the provided command string in the vty shell and returns a string

@@ -710,6 +710,50 @@ class Router(Node):
                     assert "Errors found - details follow:" == 0, errors
         return errors
 
+
+
+
+    def sendSigTermToRouter(self, wait=True, assertOnError=True, minErrorVersion='5.1'):
+        # Stop Running Quagga or FRR Daemons
+        rundaemons = self.cmd('ls -1 /var/run/%s/*.pid' % self.routertype)
+        errors = ""
+        if re.search(r"No such file or directory", rundaemons):
+            return errors
+        if rundaemons is not None:
+            numRunning = 0
+            for d in StringIO.StringIO(rundaemons):
+                daemonpid = self.cmd('cat %s' % d.rstrip()).rstrip()
+                if (daemonpid.isdigit() and pid_exists(int(daemonpid))):
+                    logger.info('{}: stopping {}'.format(
+                        self.name,
+                        os.path.basename(d.rstrip().rsplit(".", 1)[0])
+                    ))
+                    self.cmd('kill -9 %s' % daemonpid)
+                    self.waitOutput()
+                    if pid_exists(int(daemonpid)):
+                        numRunning += 1
+            if wait and numRunning > 0:
+                sleep(2, '{}: waiting for daemons stopping'.format(self.name))
+                # 2nd round of kill if daemons didn't exit
+                for d in StringIO.StringIO(rundaemons):
+                    daemonpid = self.cmd('cat %s' % d.rstrip()).rstrip()
+                    if (daemonpid.isdigit() and pid_exists(int(daemonpid))):
+                        logger.info('{}: killing {}'.format(
+                            self.name,
+                            os.path.basename(d.rstrip().rsplit(".", 1)[0])
+                        ))
+                        self.cmd('kill -7 %s' % daemonpid)
+                        self.waitOutput()
+                    self.cmd('rm -- {}'.format(d.rstrip()))
+        if wait:
+                errors = self.checkRouterCores(reportOnce=True)
+                if self.checkRouterVersion('<', minErrorVersion):
+                    #ignore errors in old versions
+                    errors = ""
+                if assertOnError and len(errors) > 0:
+                    assert "Errors found - details follow:" == 0, errors
+        return errors
+
     def removeIPs(self):
         for interface in self.intfNames():
             self.cmd('ip address flush', interface)

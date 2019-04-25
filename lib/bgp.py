@@ -421,7 +421,17 @@ def _print_bgp_neighbors_cfg(bgp_cfg, neighbor):
 
     #bgp neighbor a.b.c.d graceful-restart
     if neighbor.graceful_restart != None:
-    	bgp_cfg.bgp_neighbors.write(
+        if neighbor.graceful_restart == "no_graceful-restart" :
+    	    bgp_cfg.bgp_neighbors.write(
+        	'no ' + neigh_cxt + 'graceful-restart' + '\n')
+        elif neighbor.graceful_restart == "no_graceful-restart-helper" :
+    	    bgp_cfg.bgp_neighbors.write(
+        	'no ' + neigh_cxt + 'graceful-restart-helper' + '\n')
+        elif neighbor.graceful_restart == "no_graceful-restart-disable" :
+    	    bgp_cfg.bgp_neighbors.write(
+        	'no ' + neigh_cxt + 'graceful-restart-disable' + '\n')
+        else :
+    	    bgp_cfg.bgp_neighbors.write(
         	neigh_cxt + str(neighbor.graceful_restart) + '\n')
 
     bgp_cfg.bgp_neighbors.write(neigh_cxt + 'activate\n')
@@ -827,7 +837,7 @@ def configure_graceful_restart(ADDR_TYPE, input_dict, tgen, CWD, topo):
         logger.error(errormsg)
         return errormsg
 
-    logger.info("Exiting lib API: configure_graceful_restart()")
+    logger.info("Exiting lib API:  configure_graceful_restart()")
     return True
 
 def modify_AS_number(ADDR_TYPE, input_dict, tgen, CWD, topo):
@@ -1269,24 +1279,52 @@ def verify_graceful_restart(ADDR_TYPE, input_dict, tgen, topo, dut):
             logger.error('Nighbor ip NOT a macth {}')
             return False
 
-        if input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"]["graceful-restart"] == "graceful-restart-helper" :
-	    lmode = "Helper"
-        elif input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"]["graceful-restart"] == "graceful-restart" :
-	    lmode = "Restart"
-        elif input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"]["graceful-restart"] == "graceful-restart-disable" :
-	    lmode = "Disable"
+        if "graceful-restart" in input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"] :
+            if input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"]["graceful-restart"] == "graceful-restart-helper" :
+	        lmode = "Helper"
+            elif input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"]["graceful-restart"] == "graceful-restart" :
+	        lmode = "Restart"
+            elif input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"]["graceful-restart"] == "graceful-restart-disable" :
+	        lmode = "Disable"
+	    else :
+	        lmode = "no_cmd"
 	else :
 	    lmode = None
 
+	if lmode == None or lmode == "no_cmd" :
+            if "gracefulrestart" in input_dict["r1"]["bgp"] :                
+                if input_dict["r1"]["bgp"]['gracefulrestart'] == "graceful-restart" :              
+                    lmode = "Restart*"                
+                elif input_dict["r1"]["bgp"]['gracefulrestart']  == "graceful-restart-disable" :             
+                    lmode = "Disable*"                
+	    else :
+	        lmode = "Helper*"
 
-        if input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"]== "graceful-restart-helper" :
-	    rmode = "Helper"
-        elif input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"] == "graceful-restart" :
-	    rmode = "Restart"
-        elif input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"] == "graceful-restart-disable" :
-	    rmode = "Disable"
+        if "graceful-restart" in input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"] :
+            if input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"]== "graceful-restart-helper" :
+	        rmode = "Helper"
+            elif input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"] == "graceful-restart" :
+	        rmode = "Restart"
+            elif input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"] == "graceful-restart-disable" :
+	        rmode = "Disable"
+	    else :
+	        rmode = "NotRecieved"
 	else :
 	    rmode = None
+
+
+
+        #show_bgp_graceful_json_out["localGrMode"].strip('*')
+
+#        if show_bgp_graceful_json_out["localGrMode"][0] == '*' :
+#           new_str = "" 
+#            for i in range(0, len(show_bgp_graceful_json_out["localGrMode"])): 
+#                if i != 0: 
+#                    new_str = new_str + show_bgp_graceful_json_out["localGrMode"][i]
+
+#            show_bgp_graceful_json_out["localGrMode"] = new_str
+
+
 
         if show_bgp_graceful_json_out["localGrMode"] == lmode :
             logger.info('localGrMode : {} '.format(show_bgp_graceful_json_out["localGrMode"]))
@@ -1295,6 +1333,16 @@ def verify_graceful_restart(ADDR_TYPE, input_dict, tgen, topo, dut):
             return False
 
     	logger.info(">>>>>>>>>>>>>>")
+
+#        if show_bgp_graceful_json_out["remoteGrMode"][0] == '*' :
+#            new_str = "" 
+#            for i in range(0, len(show_bgp_graceful_json_out["remoteGrMode"])): 
+#                if i != 0: 
+#                    new_str = new_str + show_bgp_graceful_json_out["remoteGrMode"][i]
+
+#            show_bgp_graceful_json_out["remoteGrMode"] = new_str
+
+       # show_bgp_graceful_json_out["remoteGrMode"].strip('*')
 
         if show_bgp_graceful_json_out["remoteGrMode"] == rmode :
             logger.info('remoteGrMode : {} '.format(show_bgp_graceful_json_out["remoteGrMode"]))
@@ -1643,7 +1691,7 @@ def clear_bgp_and_verify(ADDR_TYPE, tgen, dut, topo):
     else:
         errormsg = 'BGP neighborship is not reset after clear bgp on router' \
                    ' {}'.format(dut)
-        return erromsg
+        return errormsg
 
     logger.info("Exiting lib API: clear_bgp()")
     return True

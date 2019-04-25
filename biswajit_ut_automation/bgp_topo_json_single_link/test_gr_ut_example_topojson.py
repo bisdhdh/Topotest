@@ -350,8 +350,6 @@ def test_BGP_GR_UTP_1():
  
 
 
-'''
-
 def test_BGP_GR_UTP_3():
     logger.info(" Test Case : BGP_GR_UTP_3 >> BGP GR [Helper Mode]R1-----R2[Restart Mode] ")
 
@@ -424,10 +422,51 @@ def test_BGP_GR_UTP_3():
    
     # we need to replace this api with restart. Right now the resatrte api is not working. Test team is working on it.
     # >>> clear_bgp_and_verify('ipv4', tgen, "r2", topo)
-    
-    logger.info("[Phase 3] : R2 is still down, so time to collect GR stats >>>>>> ")
+   
+    send_SigTerm(tgen, CWD, "r2") 
 
+    #sleep (10)
+
+    #tgen.mininet_cli()
+
+    logger.info("[Phase 3] : R2 is still down, restart time 120 sec. So time verify the routes are present in BGP RIB and ZEBRA >>>>>> ")
+    #Verifying BGP RIB routes
+    input_dict = topo['routers']
+    dut = 'r1'
+    next_hop = "192.168.1.10"
+    input_dict = topo['routers']
+    result = verify_bgp_rib('ipv4', dut, tgen, input_dict, next_hop, protocol = None)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    #Verifying RIB routes
+    protocol = 'bgp'
+    result = verify_rib('ipv4', dut, tgen, input_dict, next_hop = next_hop, protocol = protocol)
+    if result != True : assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+
+    logger.info("[Phase 4] : sleep for 120 sec >>>>>> ")
+    sleep (120)
+
+    logger.info("[Phase 5] : Verify the routes from r2 >>>>>> ")
+
+    result = verify_bgp_rib('ipv4', dut, tgen, input_dict, next_hop, protocol = None)
+    if result == True:
+        logger.info("Unfortunitely the route is present {}".format(result))
+        assert False, "Testcase {} :Failed".format(tc_name)
+
+    #Verifying RIB routes
+    protocol = 'bgp'
+    result = verify_rib('ipv4', dut, tgen, input_dict, next_hop = next_hop, protocol = protocol)
+    if result == True:
+        logger.info("Unfortunitely the route is present {}".format(result))
+        assert False, "Testcase {} :Failed".format(tc_name)
+
+    logger.info("[Phase 6] : R2 is about to come up now >>>>>> ")
+    start_router(tgen, CWD, "r2")
+    sleep (5)
     
+    logger.info("[Phase 7] : R2 is UP Now ! >>>>>> ")
     # GR test case starts from here.
     input_dict = {
    	"r1": {
@@ -474,7 +513,7 @@ def test_BGP_GR_UTP_3():
     #if result != True : assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
         
 
-    logger.info("[Phase 4] : R2 is UP now, so time to collect GR stats >>>>>> ")
+    logger.info("[Phase 8] : R2 is UP now, so time to collect GR stats >>>>>> ")
 
 
     # GR test case starts from here.
@@ -523,15 +562,12 @@ def test_BGP_GR_UTP_3():
     if result != True : assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
         
 
-    logger.info("[Phase 5] : End of the Test >>>>>>")
+    logger.info("[Phase 9] : End of the Test >>>>>>")
 
     #tgen.mininet_cli()
  
+
 '''
-
-
-
-
 
 def test_BGP_GR_UTP_17():
     logger.info(" Test Case : BGP_GR_UTP_17 >> [Helper]R1-----R2[Restart] ")
@@ -1690,7 +1726,7 @@ def test_BGP_GR_UTP_32():
     #tgen.mininet_cli()
     logger.info("[Phase 2] : End of the Test >>>>>>")
 
-
+'''
 
 
 

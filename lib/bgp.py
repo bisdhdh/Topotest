@@ -1271,8 +1271,6 @@ def verify_graceful_restart(ADDR_TYPE, input_dict, tgen, topo, dut):
 
         show_bgp_graceful_json_out = show_bgp_graceful_json[neighbor_ip]
 
-    	logger.info("<<<<<<<<<<<<<<")
-
         if show_bgp_graceful_json_out["neighborAddr"] == neighbor_ip :
             logger.info('Nighbor ip macthed  {}'.format(neighbor_ip))
         else :
@@ -1300,30 +1298,20 @@ def verify_graceful_restart(ADDR_TYPE, input_dict, tgen, topo, dut):
 	    else :
 	        lmode = "Helper*"
 
-        if "graceful-restart" in input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"] :
-            if input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"]== "graceful-restart-helper" :
-	        rmode = "Helper"
+        if ( lmode == "Disable" or lmode == "Disable*" ) :
+            return True
+
+        if ( "graceful-restart" in input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"] ) :
+            if input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"] == "graceful-restart-helper" :
+                rmode = "Helper"
             elif input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"] == "graceful-restart" :
-	        rmode = "Restart"
+                rmode = "Restart"
             elif input_dict["r2"]["bgp"]["bgp_neighbors"]["r1"]["graceful-restart"] == "graceful-restart-disable" :
-	        rmode = "Disable"
-	    else :
-	        rmode = "NotRecieved"
-	else :
-	    rmode = None
-
-
-
-        #show_bgp_graceful_json_out["localGrMode"].strip('*')
-
-#        if show_bgp_graceful_json_out["localGrMode"][0] == '*' :
-#           new_str = "" 
-#            for i in range(0, len(show_bgp_graceful_json_out["localGrMode"])): 
-#                if i != 0: 
-#                    new_str = new_str + show_bgp_graceful_json_out["localGrMode"][i]
-
-#            show_bgp_graceful_json_out["localGrMode"] = new_str
-
+                rmode = "Disable"
+            else :
+                rmode = "NotRecieved"
+        else :
+            rmode = None
 
 
         if show_bgp_graceful_json_out["localGrMode"] == lmode :
@@ -1332,17 +1320,7 @@ def verify_graceful_restart(ADDR_TYPE, input_dict, tgen, topo, dut):
             logger.error('localGrMode is not correct {}'.format(show_bgp_graceful_json_out["localGrMode"]))
             return False
 
-    	logger.info(">>>>>>>>>>>>>>")
 
-#        if show_bgp_graceful_json_out["remoteGrMode"][0] == '*' :
-#            new_str = "" 
-#            for i in range(0, len(show_bgp_graceful_json_out["remoteGrMode"])): 
-#                if i != 0: 
-#                    new_str = new_str + show_bgp_graceful_json_out["remoteGrMode"][i]
-
-#            show_bgp_graceful_json_out["remoteGrMode"] = new_str
-
-       # show_bgp_graceful_json_out["remoteGrMode"].strip('*')
 
         if show_bgp_graceful_json_out["remoteGrMode"] == rmode :
             logger.info('remoteGrMode : {} '.format(show_bgp_graceful_json_out["remoteGrMode"]))

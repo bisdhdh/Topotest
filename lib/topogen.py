@@ -734,16 +734,11 @@ class TopoRouter(TopoGear):
 
         # Run the commands and delete the temporary file
         if pretty_output:
-            if topotest.version_cmp(platform.release(), '4.5') < 0:
-                vtysh_command = 'vtysh {} < {} -p'.format(dparam, fname)
-            else:
-                vtysh_command = 'vtysh {} < {}'.format(dparam, fname)
+            vtysh_command = 'vtysh {} < {}'.format(dparam, fname)
         else:
-            if topotest.version_cmp(platform.release(), '4.5') < 0:
-                vtysh_command = 'vtysh {} -f {} -p'.format(dparam, fname)
-            else:
-                vtysh_command = 'vtysh {} -f {}'.format(dparam, fname)
+            vtysh_command = 'vtysh {} -f {}'.format(dparam, fname)
 
+	    print("vtysh_command...", vtysh_command)
         res = self.run(vtysh_command)
         os.unlink(fname)
 

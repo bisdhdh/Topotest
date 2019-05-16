@@ -187,17 +187,19 @@ def test_BGP_GR_UTP_1():
 
     logger.info("[Phase 1] : Test Setup [Helper Mode]R1-----R2[Restart Mode] Initilized >>>>>> ")
 
+    #tgen.mininet_cli()
 
     result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut = "r1")
     if result != True : 
         assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+    
+    #tgen.mininet_cli()
 
     result = verify_r_bit('ipv4', input_dict, tgen, topo, dut="r1")
     if result != True : 
         assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
 
     
-    # tgen.mininet_cli()
 
     # Verifying BGP RIB routes
     dut = 'r1'
@@ -246,9 +248,10 @@ def test_BGP_GR_UTP_1():
 
     logger.info("[Phase 5] : R2 is about to come up now >>>>>> ")
     start_router(tgen, CWD, "r2")
-    #sleep (5)
+    sleep (5)
     
     logger.info("[Phase 5] : R2 is UP Now ! >>>>>> ")
+
 
     # GR test case starts from here.
     input_dict = {
@@ -272,6 +275,7 @@ def test_BGP_GR_UTP_1():
          }
     }
 
+    #tgen.mininet_cli()
     # Verifying GR stats
     result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut)
     if result != True : 
@@ -537,6 +541,7 @@ def test_BGP_GR_UTP_3():
          }
     }
 
+    #tgen.mininet_cli()
     # Verifying GR stats
     result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut)
     if result != True : 
@@ -564,7 +569,8 @@ def test_BGP_GR_UTP_3():
     logger.info("[Phase 9] : End of the Test >>>>>>")
 
     #tgen.mininet_cli()
- 
+
+
 
 def test_BGP_GR_UTP_15():
     logger.info(" Test Case : BGP_GR_UTP_3 >> BGP GR [Restart]R1-----R2[Helper] ")
@@ -614,15 +620,6 @@ def test_BGP_GR_UTP_15():
     if result != True : 
         assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
 
-    result = verify_r_bit('ipv4', input_dict, tgen, topo, dut="r1")
-    if result != True : 
-        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
-
-    
-    result = verify_r_bit('ipv4', input_dict, tgen, topo, dut="r2")
-    if result != True : 
-        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
-    # tgen.mininet_cli()
 
     # Verifying BGP RIB routes
     dut = 'r1'
@@ -678,11 +675,6 @@ def test_BGP_GR_UTP_15():
     # Verifying GR stats
     dut = 'r1'
     result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut)
-    if result != True : 
-        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
-
-    dut = 'r1'
-    result = verify_r_bit('ipv4', input_dict, tgen, topo, dut)
     if result != True : 
         assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
 
@@ -759,9 +751,6 @@ def test_BGP_GR_UTP_15():
 
     logger.info("[Phase 9] : End of the Test >>>>>>")
 
-
-
-
 def test_BGP_GR_UTP_17():
     logger.info(" Test Case : BGP_GR_UTP_17 >> [Helper]R1-----R2[Restart] ")
 
@@ -784,7 +773,7 @@ def test_BGP_GR_UTP_17():
                        "graceful-restart": "graceful-restart-helper"
                 }
        	     },
-             "gracefulrestart":"graceful-restart" 
+             "gracefulrestart":["graceful-restart"] 
            }
          },
         "r2": {
@@ -849,7 +838,7 @@ def test_BGP_GR_UTP_17():
                        "graceful-restart": "graceful-restart-helper"
                 }
        	     },
-             "gracefulrestart":"graceful-restart" 
+             "gracefulrestart":["graceful-restart"] 
            }
          },
         "r2": {
@@ -899,7 +888,7 @@ def test_BGP_GR_UTP_17():
                        "graceful-restart": "graceful-restart-helper"
                 }
        	     },
-             "gracefulrestart":"graceful-restart" 
+             "gracefulrestart":["graceful-restart"]
            }
          },
         "r2": {
@@ -967,7 +956,7 @@ def test_BGP_GR_UTP_18():
                        "graceful-restart": "graceful-restart"
                 }
        	     },
-             "gracefulrestart":"graceful-restart" 
+             "gracefulrestart":["graceful-restart"]
            }
          },
         "r2": {
@@ -980,6 +969,7 @@ def test_BGP_GR_UTP_18():
            }
          }
     }
+
     result = configure_graceful_restart('ipv4', input_dict, tgen, CWD, topo)
     if result != True : 
         assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
@@ -1032,7 +1022,7 @@ def test_BGP_GR_UTP_18():
                        "graceful-restart": "graceful-restart"
                 }
        	     },
-             "gracefulrestart":"graceful-restart" 
+             "gracefulrestart":["graceful-restart"]
            }
          },
         "r2": {
@@ -1082,7 +1072,7 @@ def test_BGP_GR_UTP_18():
                        "graceful-restart": "graceful-restart"
                 }
        	     },
-             "gracefulrestart":"graceful-restart" 
+             "gracefulrestart":["graceful-restart"]
            }
          },
         "r2": {
@@ -1147,7 +1137,7 @@ def test_BGP_GR_UTP_19():
                        "graceful-restart": "graceful-restart-disable"
                 }
        	     },
-             "gracefulrestart":"graceful-restart" 
+             "gracefulrestart":["graceful-restart"]
            }
          },
         "r2": {
@@ -1200,7 +1190,7 @@ def test_BGP_GR_UTP_20():
                        "graceful-restart": "no_graceful-restart-disable"
                 }
        	     },
-             "gracefulrestart":"graceful-restart" 
+             "gracefulrestart":["graceful-restart"]
            }
          },
         "r2": {
@@ -1223,6 +1213,9 @@ def test_BGP_GR_UTP_20():
     logger.info("[Phase 1] : Test Setup [Restart]R1-----R2[Restart] Initilized >>>>>> ")
 
     #tgen.mininet_cli()
+    
+    #import pdb
+    #pdb.set_trace()
 
     result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut = "r1")
     if result != True : 
@@ -1230,8 +1223,6 @@ def test_BGP_GR_UTP_20():
 
     #tgen.mininet_cli()
     logger.info("[Phase 2] : End of the Test >>>>>>")
-
-
 
 
 def test_BGP_GR_UTP_21():
@@ -1256,7 +1247,7 @@ def test_BGP_GR_UTP_21():
                        "graceful-restart": "graceful-restart-helper"
                 }
        	     },
-             "gracefulrestart":"no_graceful-restart" 
+             "gracefulrestart":["no_graceful-restart"]
            }
          },
         "r2": {
@@ -1480,7 +1471,7 @@ def test_BGP_GR_UTP_25():
                        "graceful-restart": "graceful-restart-helper"
                }
        	     },
-             "gracefulrestart":"graceful-restart-disable" 
+             "gracefulrestart":["graceful-restart-disable"]
            }
          },
         "r2": {
@@ -1537,7 +1528,7 @@ def test_BGP_GR_UTP_26():
                        "graceful-restart": "graceful-restart"
                }
        	     },
-             "gracefulrestart":"graceful-restart-disable" 
+             "gracefulrestart":["graceful-restart-disable"]
            }
          },
         "r2": {
@@ -1595,7 +1586,7 @@ def test_BGP_GR_UTP_27():
                        "graceful-restart": "graceful-restart-disable"
                }
        	     },
-             "gracefulrestart":"graceful-restart-disable" 
+             "gracefulrestart":["graceful-restart-disable"]
            }
          },
         "r2": {
@@ -1654,7 +1645,7 @@ def test_BGP_GR_UTP_28():
                        "graceful-restart": "no_graceful-restart-disable"
                }
        	     },
-             "gracefulrestart":"graceful-restart-disable" 
+             "gracefulrestart":["graceful-restart-disable"]
            }
          },
         "r2": {
@@ -1688,13 +1679,6 @@ def test_BGP_GR_UTP_28():
 
 
 
-
-
-
-
-
-
-
 def test_BGP_GR_UTP_29():
     logger.info(" Test Case : BGP_GR_UTP_29 >> [Helper]R1-----R2[Restart] ")
 
@@ -1717,7 +1701,7 @@ def test_BGP_GR_UTP_29():
                        "graceful-restart":"graceful-restart-helper"
                }
        	     },
-             "gracefulrestart":"no_graceful-restart-disable" 
+             "gracefulrestart":["no_graceful-restart-disable"]
            }
          },
         "r2": {
@@ -2613,6 +2597,434 @@ def test_BGP_GR_UTP_36():
 
     logger.info("[Phase 6] : End of the Test >>>>>>")
 
+
+def test_BGP_GR_Restarting_4():
+    logger.info(" Test Case : BGP_GR_Restarting_4 >> BGP GR [Restart Mode]R1-----R2[Helper Mode] ")
+
+
+    tgen = get_topogen()
+    global bgp_convergence
+    tc_name = "test_BGP_GR_Restarting_4"
+    
+    if bgp_convergence != True:
+        pytest.skip('skipped because of BGP Convergence failure')
+   
+    # redistribute static routes from r1 <--- r2 
+
+    # GR test case starts from here.
+    input_dict = {
+   	"r1": {
+       	  "bgp": {
+            "bgp_neighbors": {
+               "r2": {
+                       "graceful-restart": "graceful-restart"
+                }
+       	     }
+           }
+         },
+        "r2": {
+          "bgp": {
+            "bgp_neighbors": {
+               "r1": {
+                       "graceful-restart": "graceful-restart-helper"
+                }
+             }
+           }
+         }
+    }
+
+    result = configure_graceful_restart('ipv4', input_dict, tgen, CWD, topo)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    clear_bgp_and_verify('ipv4', tgen, "r1", topo)
+    clear_bgp_and_verify('ipv4', tgen, "r2", topo)
+
+    logger.info("[Phase 1] : Test Setup [Restart Mode]R1-----R2[Helper Mode] Initilized >>>>>> ")
+
+
+    result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut = "r1")
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    
+    # tgen.mininet_cli()
+
+    # Verifying BGP RIB routes
+    dut = 'r1'
+    next_hop = "192.168.1.10"
+    input_dict = topo['routers']
+    result = verify_bgp_rib('ipv4', dut, tgen, input_dict, next_hop, protocol = None)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    # Verifying RIB routes
+    protocol = 'bgp'
+    result = verify_rib('ipv4', dut, tgen, input_dict, next_hop = next_hop, protocol = protocol)
+    if result != True : assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    logger.info("[Phase 2] : R2 goes for reload >>>>>> ")
+   
+    #tgen.mininet_cli()
+
+    # we need to replace this api with restart. Right now the resatrte api is not working. Test team is working on it.
+    #clear_bgp_and_verify('ipv4', tgen, "r2", topo)
+
+    send_SigTerm(tgen, CWD, "r2") 
+
+    #sleep (10)
+
+    #tgen.mininet_cli()
+
+    logger.info("[Phase 3] : R2 is still down, restart time 120 sec. So time verify the routes are present in BGP RIB and ZEBRA >>>>>> ")
+    #Verifying BGP RIB routes
+    input_dict = topo['routers']
+    dut = 'r1'
+    next_hop = "192.168.1.10"
+    input_dict = topo['routers']
+    result = verify_bgp_rib('ipv4', dut, tgen, input_dict, next_hop, protocol = None)
+    if result == True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    #Verifying RIB routes
+    protocol = 'bgp'
+    result = verify_rib('ipv4', dut, tgen, input_dict, next_hop = next_hop, protocol = protocol)
+    if result == True : assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+
+    logger.info("[Phase 4] : sleep for 10 sec >>>>>> ")
+    sleep (10)
+
+    logger.info("[Phase 5] : R2 is about to come up now >>>>>> ")
+    start_router(tgen, CWD, "r2")
+    #sleep (5)
+    
+    logger.info("[Phase 5] : R2 is UP Now ! >>>>>> ")
+
+    # GR test case starts from here.
+    input_dict = {
+   	"r1": {
+       	  "bgp": {
+            "bgp_neighbors": {
+               "r2": {
+                       "graceful-restart": "graceful-restart"
+                }
+       	     }
+           }
+         },
+        "r2": {
+          "bgp": {
+            "bgp_neighbors": {
+               "r1": {
+                       "graceful-restart": "graceful-restart-helper"
+                }
+             }
+           }
+         }
+    }
+
+  #  tgen.mininet_cli()
+    dut = 'r1'
+    
+    # Verifying GR stats
+    result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+   
+    result = verify_r_bit('ipv4', input_dict, tgen, topo, dut)
+    if result == True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+
+    #tgen.mininet_cli()
+
+
+def test_BGP_GR_Restarting_8():
+    logger.info(" Test Case : BGP_GR_Restarting_8 >> BGP GR [Restart Mode]R1-----R2[Restart Mode] ")
+
+
+    tgen = get_topogen()
+    global bgp_convergence
+    tc_name = "test_BGP_GR_Restarting_8"
+    
+    if bgp_convergence != True:
+        pytest.skip('skipped because of BGP Convergence failure')
+   
+    # redistribute static routes from r1 <--- r2 
+
+    # GR test case starts from here.
+    input_dict = {
+   	"r1": {
+       	  "bgp": {
+            "bgp_neighbors": {
+               "r2": {
+                       "graceful-restart": "graceful-restart"
+                }
+       	     }
+           }
+         },
+        "r2": {
+          "bgp": {
+            "bgp_neighbors": {
+               "r1": {
+                       "graceful-restart": "graceful-restart"
+                }
+             }
+           }
+         }
+    }
+
+    result = configure_graceful_restart('ipv4', input_dict, tgen, CWD, topo)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    clear_bgp_and_verify('ipv4', tgen, "r1", topo)
+    clear_bgp_and_verify('ipv4', tgen, "r2", topo)
+
+    logger.info("[Phase 1] : Test Setup [Restart Mode]R1-----R2[Restart Mode] Initilized >>>>>> ")
+
+
+    result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut = "r1")
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    
+    # tgen.mininet_cli()
+
+    # Verifying BGP RIB routes
+    dut = 'r1'
+    next_hop = "192.168.1.10"
+    input_dict = topo['routers']
+    result = verify_bgp_rib('ipv4', dut, tgen, input_dict, next_hop, protocol = None)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    # Verifying RIB routes
+    protocol = 'bgp'
+    result = verify_rib('ipv4', dut, tgen, input_dict, next_hop = next_hop, protocol = protocol)
+    if result != True : assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    logger.info("[Phase 2] : R2 goes for reload >>>>>> ")
+   
+    #tgen.mininet_cli()
+
+    # we need to replace this api with restart. Right now the resatrte api is not working. Test team is working on it.
+    #clear_bgp_and_verify('ipv4', tgen, "r2", topo)
+
+    send_SigTerm(tgen, CWD, "r2") 
+
+    #sleep (10)
+
+    #tgen.mininet_cli()
+
+    logger.info("[Phase 3] : R2 is still down, restart time 120 sec. So time verify the routes are present in BGP RIB and ZEBRA >>>>>> ")
+    #Verifying BGP RIB routes
+    input_dict = topo['routers']
+    dut = 'r1'
+    next_hop = "192.168.1.10"
+    input_dict = topo['routers']
+    result = verify_bgp_rib('ipv4', dut, tgen, input_dict, next_hop, protocol = None)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    #Verifying RIB routes
+    protocol = 'bgp'
+    result = verify_rib('ipv4', dut, tgen, input_dict, next_hop = next_hop, protocol = protocol)
+    if result != True : assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+
+    logger.info("[Phase 4] : sleep for 10 sec >>>>>> ")
+    sleep (10)
+
+    logger.info("[Phase 5] : R2 is about to come up now >>>>>> ")
+    start_router(tgen, CWD, "r2")
+    #sleep (5)
+    
+    logger.info("[Phase 5] : R2 is UP Now ! >>>>>> ")
+
+    # GR test case starts from here.
+    input_dict = {
+   	"r1": {
+       	  "bgp": {
+            "bgp_neighbors": {
+               "r2": {
+                       "graceful-restart": "graceful-restart"
+                }
+       	     }
+           }
+         },
+        "r2": {
+          "bgp": {
+            "bgp_neighbors": {
+               "r1": {
+                       "graceful-restart": "graceful-restart"
+                }
+             }
+           }
+         }
+    }
+
+    dut = 'r1'
+    
+    # Verifying GR stats
+    result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+   
+    result = verify_r_bit('ipv4', input_dict, tgen, topo, dut)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+
+    #tgen.mininet_cli()
+    result = verify_f_bit('ipv4', input_dict, tgen, topo, dut)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    #tgen.mininet_cli()
+
+
+def test_BGP_GR_Restarting_9():
+    logger.info(" Test Case : BGP_GR_Restarting_9 >> BGP GR [Restart Mode]R1-----R2[Helper Mode] ")
+
+
+    tgen = get_topogen()
+    global bgp_convergence
+    tc_name = "test_BGP_GR_Restarting_9"
+    
+    if bgp_convergence != True:
+        pytest.skip('skipped because of BGP Convergence failure')
+   
+    # redistribute static routes from r1 <--- r2 
+
+    # GR test case starts from here.
+    input_dict = {
+   	"r1": {
+       	  "bgp": {
+            "bgp_neighbors": {
+               "r2": {
+                       "graceful-restart": "graceful-restart"
+                }
+       	     }
+           }
+         },
+        "r2": {
+          "bgp": {
+            "bgp_neighbors": {
+               "r1": {
+                       "graceful-restart": "graceful-restart-helper"
+                }
+             }
+           }
+         }
+    }
+
+    result = configure_graceful_restart('ipv4', input_dict, tgen, CWD, topo)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    clear_bgp_and_verify('ipv4', tgen, "r1", topo)
+    clear_bgp_and_verify('ipv4', tgen, "r2", topo)
+
+    logger.info("[Phase 1] : Test Setup [Restart Mode]R1-----R2[Helper Mode] Initilized >>>>>> ")
+
+
+    result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut = "r1")
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    
+    # tgen.mininet_cli()
+
+    # Verifying BGP RIB routes
+    dut = 'r1'
+    next_hop = "192.168.1.10"
+    input_dict = topo['routers']
+    result = verify_bgp_rib('ipv4', dut, tgen, input_dict, next_hop, protocol = None)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    # Verifying RIB routes
+    protocol = 'bgp'
+    result = verify_rib('ipv4', dut, tgen, input_dict, next_hop = next_hop, protocol = protocol)
+    if result != True : assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    logger.info("[Phase 2] : R2 goes for reload >>>>>> ")
+   
+    #tgen.mininet_cli()
+
+    # we need to replace this api with restart. Right now the resatrte api is not working. Test team is working on it.
+    #clear_bgp_and_verify('ipv4', tgen, "r2", topo)
+
+    send_SigTerm(tgen, CWD, "r2") 
+
+    #sleep (10)
+
+    #tgen.mininet_cli()
+
+    logger.info("[Phase 3] : R2 is still down, restart time 120 sec. So time verify the routes are present in BGP RIB and ZEBRA >>>>>> ")
+    #Verifying BGP RIB routes
+    input_dict = topo['routers']
+    dut = 'r1'
+    next_hop = "192.168.1.10"
+    input_dict = topo['routers']
+    result = verify_bgp_rib('ipv4', dut, tgen, input_dict, next_hop, protocol = None)
+    if result == True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+    #Verifying RIB routes
+    protocol = 'bgp'
+    result = verify_rib('ipv4', dut, tgen, input_dict, next_hop = next_hop, protocol = protocol)
+    if result == True : assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+
+    logger.info("[Phase 4] : sleep for 10 sec >>>>>> ")
+    sleep (10)
+
+    logger.info("[Phase 5] : R2 is about to come up now >>>>>> ")
+    start_router(tgen, CWD, "r2")
+    #sleep (5)
+    
+    logger.info("[Phase 5] : R2 is UP Now ! >>>>>> ")
+
+    # GR test case starts from here.
+    input_dict = {
+   	"r1": {
+       	  "bgp": {
+            "bgp_neighbors": {
+               "r2": {
+                       "graceful-restart": "graceful-restart"
+                }
+       	     }
+           }
+         },
+        "r2": {
+          "bgp": {
+            "bgp_neighbors": {
+               "r1": {
+                       "graceful-restart": "graceful-restart-helper"
+                }
+             }
+           }
+         }
+    }
+
+  #  tgen.mininet_cli()
+    dut = 'r1'
+    
+    # Verifying GR stats
+    result = verify_graceful_restart('ipv4', input_dict, tgen, topo, dut)
+    if result != True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+   
+    result = verify_r_bit('ipv4', input_dict, tgen, topo, dut)
+    if result == True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
+
+
+    result = verify_f_bit('ipv4', input_dict, tgen, topo, dut)
+    if result == True : 
+        assert False, "Testcase " + tc_name + " :Failed \n Error: {}".format(result)
 
 if __name__ == '__main__':
     args = ["-s"] + sys.argv[1:]

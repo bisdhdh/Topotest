@@ -121,7 +121,7 @@ def create_bgp_cfg(router, topo):
             graceful_restart = topo['routers']['{}'.format(router)][key][
                 'gracefulrestart']
 	else:
-	    graceful_restart = None
+	    graceful_restart = []
 
 	if "enabled" in topo['routers']['{}'.format(router)][key]:
             bgp_enabled = topo['routers']['{}'.format(router)][key]['enabled']
@@ -356,7 +356,7 @@ class Bgp:
 
 
 def _print_bgp_global_cfg(bgp_cfg, local_as_no, router_id, ecmp_path,
-                          gr_enable):
+                          graceful_restart):
     bgp_cfg.bgp_global.write('router bgp ' + str(local_as_no) + '\n')
     if router_id != None:
         bgp_cfg.bgp_global.write('bgp router-id ' + IpAddressMsg_to_str(
@@ -366,14 +366,20 @@ def _print_bgp_global_cfg(bgp_cfg, local_as_no, router_id, ecmp_path,
         bgp_cfg.bgp_global.write('maximum-paths ' + str(ecmp_path) + '\n')
     bgp_cfg.bgp_global.write('bgp fast-external-failover\n')
     bgp_cfg.bgp_global.write('bgp log-neighbor-changes\n')
-    if gr_enable == "graceful-restart":
-        bgp_cfg.bgp_global.write(' bgp graceful-restart\n')
-    elif gr_enable == "graceful-restart-disable":
-        bgp_cfg.bgp_global.write(' bgp graceful-restart-disable\n')
-    elif gr_enable == "no_graceful-restart":
-        bgp_cfg.bgp_global.write(' no bgp graceful-restart\n')
-    elif gr_enable == "no_graceful-restart-disable":
-        bgp_cfg.bgp_global.write(' no bgp graceful-restart-disable\n')
+
+    for gr_enable in graceful_restart:
+        if gr_enable == "graceful-restart":
+            bgp_cfg.bgp_global.write(' bgp graceful-restart\n')
+        elif gr_enable == "graceful-restart-disable":
+            bgp_cfg.bgp_global.write(' bgp graceful-restart-disable\n')
+        elif gr_enable == "no_graceful-restart":
+            bgp_cfg.bgp_global.write(' no bgp graceful-restart\n')
+        elif gr_enable == "no_graceful-restart-disable":
+            bgp_cfg.bgp_global.write(' no bgp graceful-restart-disable\n')
+        elif gr_enable == "preserve-fw-state":
+            bgp_cfg.bgp_global.write(' bgp graceful-restart preserve-fw-state\n')
+        elif gr_enable == "no_preserve-fw-state":
+            bgp_cfg.bgp_global.write(' no bgp graceful-restart preserve-fw-state\n')
 
 def _print_bgp_address_family_cfg(bgp_cfg, neigh_ip, addr_family):
     out_filter_or_rmap = False
@@ -1264,10 +1270,10 @@ def verify_graceful_restart(ADDR_TYPE, input_dict, tgen, topo, dut):
 
         show_bgp_graceful_json = None
 
-	print("router..................", router)
+        print("router..................", router)
         show_bgp_graceful_json = rnode.vtysh_cmd("show bgp {} neighbor {} graceful-restart json".format(ADDR_TYPE,neighbor_ip), isjson=True)
                     
-	print('show_bgp_graceful_json',show_bgp_graceful_json)
+        print('show_bgp_graceful_json',show_bgp_graceful_json)
 
         show_bgp_graceful_json_out = show_bgp_graceful_json[neighbor_ip]
 
@@ -1277,26 +1283,32 @@ def verify_graceful_restart(ADDR_TYPE, input_dict, tgen, topo, dut):
             logger.error('Nighbor ip NOT a macth {}')
             return False
 
+        #import pdb
+        #pdb.set_trace()
+
         if "graceful-restart" in input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"] :
             if input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"]["graceful-restart"] == "graceful-restart-helper" :
-	        lmode = "Helper"
+                lmode = "Helper"
             elif input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"]["graceful-restart"] == "graceful-restart" :
-	        lmode = "Restart"
+                lmode = "Restart"
             elif input_dict["r1"]["bgp"]["bgp_neighbors"]["r2"]["graceful-restart"] == "graceful-restart-disable" :
-	        lmode = "Disable"
-	    else :
-	        lmode = "no_cmd"
-	else :
-	    lmode = None
+                lmode = "Disable"
+            else :
+                lmode = "no_cmd"
+        else :
+            lmode = None
 
-	if lmode == None or lmode == "no_cmd" :
-            if "gracefulrestart" in input_dict["r1"]["bgp"] :                
-                if input_dict["r1"]["bgp"]['gracefulrestart'] == "graceful-restart" :              
+        if lmode == None or lmode == "no_cmd" :
+            if "gracefulrestart" in input_dict["r1"]["bgp"] :
+                
+                if "graceful-restart" in input_dict["r1"]["bgp"]['gracefulrestart'] :              
                     lmode = "Restart*"                
-                elif input_dict["r1"]["bgp"]['gracefulrestart']  == "graceful-restart-disable" :             
+                elif "graceful-restart-disable" in input_dict["r1"]["bgp"]['gracefulrestart'] :             
                     lmode = "Disable*"                
-	    else :
-	        lmode = "Helper*"
+                else :
+                    lmode = "Helper*"
+            else :
+                lmode = "Helper*"
 
         if ( lmode == "Disable" or lmode == "Disable*" ) :
             return True
@@ -1384,14 +1396,89 @@ def verify_r_bit(ADDR_TYPE, input_dict, tgen, topo, dut):
         if show_bgp_graceful_json_out["neighborAddr"] == neighbor_ip :
             logger.info('Nighbor ip macthed  {}'.format(neighbor_ip))
         else :
-            logger.error('Nighbor ip NOT a macth {}')
+            logger.error('Nighbor ip NOT a macth {}').format(neighbor_ip)
             return False
 
+        if show_bgp_graceful_json_out["rBit"] :
+            logger.info('Rbit true  {}'.format(neighbor_ip))
+        else :
+            logger.error('Rbit false {}'.format(neighbor_ip))
+            return False
 
     logger.info("Exiting lib API: verify_r_bit()")
     return True
 
+## Verification API for f-bit
+def verify_f_bit(ADDR_TYPE, input_dict, tgen, topo, dut):
+    """
+    This API is to verify verify_f_bit for any router.
 
+    * `input_dict`: input dictionary, have details of Device Under Test, for
+                    which user wants to test the data
+    * `tgen`: topogen object
+    * `topo`: input json file data
+    """
+    logger.info("Entering lib API: verify_f_bit()")
+
+    for router, rnode in tgen.routers().iteritems():
+        if router != dut :
+            continue
+
+
+        neighbors = input_dict[router]["bgp"]["bgp_neighbors"]
+        for neighbor in neighbors.keys():
+            graceful_restart = input_dict[router]["bgp"]["bgp_neighbors"][neighbor]['graceful-restart']
+
+            # loopback interface
+            bgp_neighbors = topo['routers'][router]["bgp"]["bgp_neighbors"]
+            if "source_link" in bgp_neighbors[neighbor]['peer'] \
+                and bgp_neighbors[neighbor]['peer']['source_link'] == 'lo':
+                neighbor_ip = topo['routers'][neighbor]['lo'][
+                    ADDR_TYPE].split("/")[0]
+            else:
+                # Physical interface
+                # Peer Details
+                peer = bgp_neighbors[neighbor]['peer']
+                dest_link = peer['dest_link']
+
+            for destRouterLink in topo['routers'][neighbor]['links'].\
+                iteritems():
+                if dest_link == destRouterLink[0]:
+                    neighbor_ip = topo['routers'][neighbor]['links'][
+                        destRouterLink[0]][ADDR_TYPE].split("/")[0]
+
+        logger.info('Checking bgp graceful-restart show o/p  {}'.format(neighbor_ip))
+
+        show_bgp_graceful_json = rnode.vtysh_cmd("show bgp {} neighbor {} graceful-restart json".format(ADDR_TYPE,neighbor_ip), isjson=True)
+                    
+	print('show_bgp_graceful_json',show_bgp_graceful_json)
+
+        show_bgp_graceful_json_out = show_bgp_graceful_json[neighbor_ip]
+
+        if show_bgp_graceful_json_out["neighborAddr"] == neighbor_ip :
+            logger.info('Nighbor ip macthed  {}'.format(neighbor_ip))
+        else :
+            logger.error('Nighbor ip NOT a macth {}'.format(neighbor_ip))
+            return False
+
+
+        if "IPv4 Unicast" in show_bgp_graceful_json_out :
+            if show_bgp_graceful_json_out["IPv4 Unicast"]["fBit"] :
+                logger.info('Fbit True for {} IPv4 Unicast'.format(neighbor_ip))
+                return True
+            else :
+                logger.info('Fbit False for {} IPv4 Unicast'.format(neighbor_ip))
+
+
+        if "IPv6 Unicast" in show_bgp_graceful_json_out :
+            if show_bgp_graceful_json_out["IPv6 Unicast"]["fBit"] :
+                logger.info('Fbit True for {} IPv6 Unicast'.format(neighbor_ip))
+                return True
+            else :
+                logger.info('Fbit False for {} IPv6 Unicast'.format(neighbor_ip))
+
+    logger.info("Exiting lib API: verify_f_bit()")
+    return False
 
 
 def verify_bgp_convergence(ADDR_TYPE, tgen, topo):

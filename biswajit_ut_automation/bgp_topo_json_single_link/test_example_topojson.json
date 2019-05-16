@@ -22,9 +22,11 @@
                             "dest_link": "r1-link1",
                             "addr_type": "ipv4"
                         }
-		     }
-		 }
-	}
+		             }
+		         },
+                 "gracefulrestart":["preserve-fw-state"]
+
+	     }
 },
 
 "r2": {
@@ -43,7 +45,8 @@
                             "addr_type": "ipv4"
                         }
 		     }
-		 }
+		 },
+         "gracefulrestart":["preserve-fw-state"]
 	},
         "static_routes": [{"network": "100.0.20.1/32", "no_of_ip": 9, "admin_distance": 100, "next_hop": "192.168.1.10", "tag": 4001}],
         "redistribute": [{"static": true}, {"connected": true}]

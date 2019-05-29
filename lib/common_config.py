@@ -56,6 +56,7 @@ pytestini_path = os.path.join(CD, '../pytest.ini')
 config = ConfigParser.ConfigParser()
 config.read(pytestini_path)
 
+error_list = ['% Malformed community-list value']
 CONFIG_SECTION = 'topogen'
 
 if config.has_option('topogen', 'verbosity'):
@@ -898,7 +899,12 @@ def load_config_to_router(tgen, CWD, routerName):
                     delta.write('\n')
 
                 delta.write('end\n')
-                router.vtysh_multicmd(delta.getvalue())
+                output = router.vtysh_multicmd(delta.getvalue())
+                #output = router.vtysh_multicmd(delta.getvalue(), pretty_output=False)
+                for out_err in error_list:
+                    if out_err in output:
+                        raise Exception('InvalidCliError: %s' % out_err)
+
                 logger.info('New configuration for router {}:'.format(rname))
                 delta.close()
                 delta = StringIO.StringIO()

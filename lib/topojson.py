@@ -44,6 +44,7 @@ def build_topo_from_json(tgen, topo):
         listRouters.append(routerN[0])
 
     listRouters.sort()
+    listRouters.reverse()
     if 'ipv4base' in topo:
         ipv4Next = ipaddress.IPv4Address(topo['link_ip_start']['ipv4'])
         ipv4Step = 2 ** (32 - topo['link_ip_start']['v4mask'])
@@ -54,12 +55,13 @@ def build_topo_from_json(tgen, topo):
         ipv6Step = 2 ** (128 - topo['link_ip_start']['v6mask'])
         if topo['link_ip_start']['v6mask'] < 127:
             ipv6Next += 1
+
     for router in listRouters:
         topo['routers'][router]['nextIfname'] = 0
 
     while listRouters != []:
         curRouter = listRouters.pop(0)
-	# Physical Interfaces
+	    # Physical Interfaces
         if 'links' in topo['routers'][curRouter]:
             for destRouterLink, data in sorted(topo['routers'][curRouter]['links'].\
 		iteritems()):
@@ -140,6 +142,8 @@ def build_config_from_json(tgen, topo, CWD):
         listRouters.append(routerN[0])
 
     listRouters.sort()
+    listRouters.reverse()
+
     while listRouters != []:
         curRouter = listRouters.pop(0)
 

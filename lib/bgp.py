@@ -174,10 +174,11 @@ def create_bgp_cfg(router, topo):
                                           split('/')[0]
                         if ADDR_TYPE == "ipv4":
                             af_modifier = IPv4_UNICAST
+                            addr = Address(af_modifier, ip_addr, None)
                         else:
                             af_modifier = IPv6_UNICAST
+                            addr = Address(af_modifier, None, ip_addr)
 
-                        addr = Address(af_modifier, ip_addr, None)
                         neighbor = bgp.add_neighbor(af_modifier, addr,
                                                     remote_as, keepalivetimer,
                                                     holddowntimer, None,
@@ -930,31 +931,27 @@ def redistribute_static_routes(ADDR_TYPE, input_dict, tgen, CWD, topo):
         global bgp_cfg
         for router in input_dict.keys():
             if "redistribute" in input_dict[router]:
-                networks = []
 
-                # Reset config for routers
-                #bgp_cfg[router].reset_it()
+                bgp_cfg[router].routing_pb.redistribute_static_route_map = None
+                bgp_cfg[router].routing_pb.redistribute_connected_route_map = None
 
-		bgp_cfg[router].routing_pb.redistribute_static_route_map = None
-		bgp_cfg[router].routing_pb.redistribute_connected_route_map = None
-                
-		redist = input_dict[router]['redistribute']
-		for redist_dict in redist:
-		    for key, value in redist_dict.items():
-			if key == 'static':
-			    if value == True or value == "true":
-			        bgp_cfg[router].routing_pb.redistribute_static =\
-							 True
-			    if isinstance(value, dict):
-				bgp_cfg[router].routing_pb.redistribute_static_route_map =\
-							 value['route-map']
-			if key == 'connected':	
-			    if value == True or value == "true":
-			        bgp_cfg[router].routing_pb.redistribute_connected =\
-							 True
-			    if isinstance(value, dict):
-				bgp_cfg[router].routing_pb.redistribute_connected_route_map =\
-							 value['route-map']
+                redist = input_dict[router]['redistribute']
+                for redist_dict in redist:
+                    for key, value in redist_dict.items():
+                        if key == 'static':
+                            if value == True or value == "true":
+                                bgp_cfg[router].routing_pb.redistribute_static = \
+                                    True
+                            if isinstance(value, dict):
+                                bgp_cfg[router].routing_pb. \
+                                    redistribute_static_route_map = value['route-map']
+                        if key == 'connected':
+                            if value == True or value == "true":
+                                bgp_cfg[router].routing_pb.redistribute_connected = \
+                                    True
+                            if isinstance(value, dict):
+                                bgp_cfg[router].routing_pb. \
+                                    redistribute_connected_route_map = value['route-map']
 
                 Bgp_cfg(bgp_cfg[router])
                 redist_cfg(bgp_cfg[router], ADDR_TYPE)
@@ -2375,7 +2372,7 @@ def verify_bgp_community(addr_type, dut, tgen, network, input_dict = None):
         	    logger.info("Large Community attribute is found for route: "
 				   "{} in router: {} ".format(net, dut))
 		    if input_dict != None:
-                        for criteria, comm_val in input_dict.items():
+                        for criteria, comm_val in input_dict.iteritems():
 		            show_val = show_bgp_json["paths"][i][criteria]['string']
                             if comm_val == show_val:
                                 logger.info("Verifying BGP {} for prefix: {} in"
